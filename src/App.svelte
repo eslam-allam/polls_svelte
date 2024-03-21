@@ -29,5 +29,7 @@
     max-width: 960px;
     margin: 40px auto;
     height: 100%;
+    min-height: 100%;
+    flex: 1;
   }
 </style>

@@ -114,7 +114,7 @@
   }
 
   main {
-    height: 65lvh;
+    height: 100%;
     width: 550px;
     margin: 0 auto;
     flex: 1;

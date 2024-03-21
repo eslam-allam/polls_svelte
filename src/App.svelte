@@ -28,5 +28,6 @@
   main {
     max-width: 960px;
     margin: 40px auto;
+    height: 100%;
   }
 </style>

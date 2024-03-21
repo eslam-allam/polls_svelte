@@ -2,9 +2,10 @@
   export let type = "primary";
   export let flat = false;
   export let inverse = false;
+  export let onClick = () => {}
 </script>
 
-<button class={type} class:flat={flat} class:inverse={inverse}>
+<button class={type} class:flat={flat} class:inverse={inverse} on:click={onClick}>
   <slot />
 </button>
 

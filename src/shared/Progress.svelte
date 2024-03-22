@@ -1,20 +1,14 @@
 <script>
   import { tweened } from "svelte/motion";
-  import PollStore from "../stores/PollStore";
 
-  export let optionId;
-  export let pollId;
+  export let value;
+  export let total;
   export let type = "primary";
-  const percentage = (value, total) => Math.floor((100 / total) * value);
+  const makePercentage = (value, total) => Math.floor((100 / total) * value);
 
-  $: currentPoll = $PollStore.find((p) => p.id === pollId);
-  $: total = currentPoll.totalVotes();
-  $: value = percentage(
-    currentPoll.options.find((o) => o.id === optionId).votes,
-    total,
-  );
-  const progress = tweened(value);
-  $: progress.set(value);
+  $: percentage = makePercentage(value, total);
+  const progress = tweened(percentage);
+  $: progress.set(percentage);
 </script>
 
 <div

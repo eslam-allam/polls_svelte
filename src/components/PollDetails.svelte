@@ -37,8 +37,8 @@
         on:keydown={() => handleVote(option.id, poll.id)}
       >
         <Progress
-          pollId={poll.id}
-          optionId={option.id}
+          value={option.votes}
+          total={poll.totalVotes()}
           type={i % 2 == 0 ? "primary" : "secondary"}
         ></Progress>
         <span>{option.value} ({option.votes})</span>

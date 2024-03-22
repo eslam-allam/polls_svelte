@@ -1,12 +1,12 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Button from "../shared/Button.svelte";
-  import { Poll } from "../models/Poll.js";
+  import { Poll, Option } from "../models/Poll.js";
 
   let dispatch = createEventDispatcher();
 
-  let nAnswers = 2;
-  let poll = new Poll();
+  let nOptions = 2;
+  let poll = new Poll(nOptions);
   let errors = {};
   let valid = false;
 
@@ -20,27 +20,28 @@
       errors.question = "";
     }
 
-    if (nAnswers < 2) {
+    if (nOptions < 2) {
       valid = false;
-      errors.general = "Must have at least 2 answers";
+      errors.general = "Must have at least 2 options";
     } else {
       errors.general = "";
     }
 
-    for (let i = 0; i < nAnswers; i++) {
-      let answerName = `answer-${i}`;
-      let answer = poll.options[i];
-      if (!answer || answer.trim().length < 1) {
+    for (let i = 0; i < nOptions; i++) {
+      let optionName = `option-${i}`;
+      let option = poll.options[i];
+      if (!option || !option.value || option.value.trim().length < 1) {
         valid = false;
-        errors[answerName] = "Answer cannot be empty";
+        errors[optionName] = "Option cannot be empty";
       } else {
-        errors[answerName] = "";
+        errors[optionName] = "";
       }
     }
 
     if (valid) {
       dispatch("newPoll", poll);
-      poll = new Poll();
+      console.log(poll);
+      poll = new Poll(nOptions);
     }
   };
 </script>
@@ -58,29 +59,29 @@
       />
       <div class="error">{errors.question ? errors.question : ""}</div>
     </div>
-    {#each { length: nAnswers } as _, i}
+    {#each { length: nOptions } as _, i}
       <div class="form-field">
-        <label for="answer-{i}">Answer {i + 1}:</label>
+        <label for="option-{i}">Option {i + 1}:</label>
         <input
           type="text"
-          id="answer-{i}"
-          class:invalid={errors[`answer-${i}`]}
-          bind:value={poll.options[i]}
+          id="option-{i}"
+          class:invalid={errors[`option-${i}`]}
+          bind:value={poll.options[i].value}
         />
 
         <div class="remove">
           <Button
             onClick={(e) => {
               e.preventDefault();
-              nAnswers--;
+              nOptions--;
               poll.options = poll.options
                 .slice(0, i)
                 .concat(poll.options.slice(i + 1, poll.options.length));
-            }}>Remove Answer</Button
+            }}>Remove option</Button
           >
         </div>
         <div class="error">
-          {errors[`answer-${i}`] ? errors[`answer-${i}`] : ""}
+          {errors[`option-${i}`] ? errors[`option-${i}`] : ""}
         </div>
       </div>
     {/each}
@@ -91,8 +92,9 @@
         flat={true}
         onClick={(e) => {
           e.preventDefault();
-          nAnswers++;
-        }}>Add Answer</Button
+          nOptions++;
+          poll.options.push(new Option());
+        }}>Add option</Button
       >
       <Button type="secondary" flat={true}>Add Poll</Button>
     </div>
@@ -100,19 +102,6 @@
 </main>
 
 <style>
-  main::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  main::-webkit-scrollbar-track {
-    background: #d91b42;
-    border-radius: 10px;
-  }
-  main::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 10px;
-  }
-
   main {
     height: 100%;
     width: 550px;

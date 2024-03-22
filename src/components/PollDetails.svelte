@@ -15,8 +15,8 @@
     <h3>{poll.question}</h3>
     <p>Total votes: {poll.totalVotes()}</p>
     {#each poll.options as option, i (option.id)}
-      <div class="answer" on:click={() => handleVote(option.id, poll.id)}>
-        <div class="percent percent-{i}"></div>
+      <div role="button" tabindex="0" class="answer" on:click={() => handleVote(option.id, poll.id)} on:keydown={() => handleVote(option.id, poll.id)}>
+        <div class="percent" style="width: {Math.floor(100 / poll.totalVotes() * option.votes)}%;" class:percent-a={i % 2 == 0} class:percent-b={i % 2 == 1}></div>
         <span>{option.value} ({option.votes})</span>
       </div>
     {/each}
@@ -47,5 +47,21 @@
   span {
     display: inline-block;
     padding: 10px 20px;
+  }
+
+  .percent {
+    height: 100%;
+    position: absolute;
+    box-sizing: border-box;
+  }
+
+  .percent-a {
+    border-left: 4px solid #d91b42;
+    background: rgba(217, 27, 66, 0.2);
+  }
+
+  .percent-b {
+    border-left: 4px solid #45c496;
+    background: rgba(69, 196, 150, 0.2);
   }
 </style>

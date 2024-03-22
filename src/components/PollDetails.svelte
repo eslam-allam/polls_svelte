@@ -1,12 +1,19 @@
 <script>
-  import {createEventDispatcher} from "svelte";
+  import PollStore from "../stores/PollStore";
   import Card from "../shared/Card.svelte";
 
-  const dispatch = createEventDispatcher();
   export let poll;
 
-  const handleVote = (/** @type {number} */ optionId, /** @type {string} */ pollId) => {
-    dispatch("vote", {optionId, pollId});
+  const handleVote = (
+    /** @type {number} */ optionId,
+    /** @type {string} */ pollId,
+  ) => {
+    PollStore.update((currentPolls) => {
+      let copiedPolls = [...currentPolls];
+      let upvotedPoll = copiedPolls.find((poll) => poll.id === pollId);
+      upvotedPoll.options.find((o) => o.id === optionId).votes++;
+      return copiedPolls;
+    });
   };
 </script>
 
@@ -15,8 +22,21 @@
     <h3>{poll.question}</h3>
     <p>Total votes: {poll.totalVotes()}</p>
     {#each poll.options as option, i (option.id)}
-      <div role="button" tabindex="0" class="answer" on:click={() => handleVote(option.id, poll.id)} on:keydown={() => handleVote(option.id, poll.id)}>
-        <div class="percent" style="width: {Math.floor(100 / poll.totalVotes() * option.votes)}%;" class:percent-a={i % 2 == 0} class:percent-b={i % 2 == 1}></div>
+      <div
+        role="button"
+        tabindex="0"
+        class="answer"
+        on:click={() => handleVote(option.id, poll.id)}
+        on:keydown={() => handleVote(option.id, poll.id)}
+      >
+        <div
+          class="percent"
+          style="width: {Math.floor(
+            (100 / poll.totalVotes()) * option.votes,
+          )}%;"
+          class:percent-a={i % 2 == 0}
+          class:percent-b={i % 2 == 1}
+        ></div>
         <span>{option.value} ({option.votes})</span>
       </div>
     {/each}

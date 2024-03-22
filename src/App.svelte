@@ -4,7 +4,6 @@
   import PollList from "./components/PollList.svelte";
   import Tabs from "./shared/Tabs.svelte";
   import CreatePollForm from "./components/CreatePollForm.svelte";
-  import { dummyPoll } from "./models/Poll.js";
 
   // Tabs
   let items = ["Current Polls", "Add New Poll"];
@@ -13,24 +12,9 @@
   const tabChange = (/** @type {{ detail: string; }} */ e) =>
     (activeItem = e.detail);
 
-  let polls = [
-    dummyPoll("What is love?", ["Baby don't hurt me", "I love you"]),
-  ];
-
-  const handleAddPoll = (/** @type {{ detail: import("./models/Poll.js").Poll; }} */ e) => {
-    polls = [e.detail, ...polls];
+  const handleAddPoll = () => {
     activeItem = "Current Polls";
-    console.log(polls);
   };
-
-  const handleVote = (e) => {
-    const {optionId, pollId} = e.detail
-    let copiedPolls = [...polls];
-    let upvotedPoll = copiedPolls.find((poll) => poll.id === pollId);
-    upvotedPoll.options.find((o) => o.id === optionId).votes++;
-    polls = copiedPolls;
-
-  }
 </script>
 
 <Header />
@@ -38,7 +22,7 @@
 <main>
   <Tabs {items} {activeItem} on:tabChange={tabChange} />
   {#if activeItem === "Current Polls"}
-    <PollList {polls} on:vote={handleVote}/>
+    <PollList />
   {:else if activeItem === "Add New Poll"}
     <CreatePollForm on:add={handleAddPoll} />
   {/if}

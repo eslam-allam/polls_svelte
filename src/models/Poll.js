@@ -5,6 +5,7 @@ export class Option {
   constructor() {
     this.value = "";
     this.votes = 0;
+    this.id = uuid();
   }
 }
 

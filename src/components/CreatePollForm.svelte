@@ -58,7 +58,7 @@
       />
       <div class="error">{errors.question ? errors.question : ""}</div>
     </div>
-    {#each { length: nOptions } as _, i}
+    {#each poll.options as option, i (option.id)}
       <div class="form-field">
         <label for="option-{i}">Option {i + 1}:</label>
         <input

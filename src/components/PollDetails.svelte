@@ -2,6 +2,7 @@
   import PollStore from "../stores/PollStore";
   import Card from "../shared/Card.svelte";
   import Button from "../shared/Button.svelte";
+  import Progress from "../shared/Progress.svelte";
 
   export let poll;
 
@@ -17,7 +18,10 @@
     });
   };
 
-  const handleDelete = (id) => PollStore.update((currentPolls) => currentPolls.filter(poll => poll.id != id));
+  const handleDelete = (id) =>
+    PollStore.update((currentPolls) =>
+      currentPolls.filter((poll) => poll.id != id),
+    );
 </script>
 
 <Card>
@@ -32,14 +36,11 @@
         on:click={() => handleVote(option.id, poll.id)}
         on:keydown={() => handleVote(option.id, poll.id)}
       >
-        <div
-          class="percent"
-          style="width: {Math.floor(
-            (100 / poll.totalVotes()) * option.votes,
-          )}%;"
-          class:percent-a={i % 2 == 0}
-          class:percent-b={i % 2 == 1}
-        ></div>
+        <Progress
+          pollId={poll.id}
+          optionId={option.id}
+          type={i % 2 == 0 ? "primary" : "secondary"}
+        ></Progress>
         <span>{option.value} ({option.votes})</span>
       </div>
     {/each}
@@ -73,22 +74,6 @@
   span {
     display: inline-block;
     padding: 10px 20px;
-  }
-
-  .percent {
-    height: 100%;
-    position: absolute;
-    box-sizing: border-box;
-  }
-
-  .percent-a {
-    border-left: 4px solid #d91b42;
-    background: rgba(217, 27, 66, 0.2);
-  }
-
-  .percent-b {
-    border-left: 4px solid #45c496;
-    background: rgba(69, 196, 150, 0.2);
   }
 
   .delete {

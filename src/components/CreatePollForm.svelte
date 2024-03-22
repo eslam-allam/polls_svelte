@@ -39,8 +39,7 @@
     }
 
     if (valid) {
-      dispatch("newPoll", poll);
-      console.log(poll);
+      dispatch("add", poll);
       poll = new Poll(nOptions);
     }
   };

@@ -4,10 +4,16 @@
   export let value;
   export let total;
   export let type = "primary";
-  const makePercentage = (value, total) => Math.floor((100 / total) * value);
+  const makePercentage = (value, total) => { 
+    if (total == 0) {
+      return 0;
+    }
+    return Math.floor((100 / total) * value);
+  }
 
+  const progress = tweened(0);
+  
   $: percentage = makePercentage(value, total);
-  const progress = tweened(percentage);
   $: progress.set(percentage);
 </script>
 
